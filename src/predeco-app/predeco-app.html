@@ -1,0 +1,32 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="predeco-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PredecoApp extends Polymer.Element {
+      static get is() { return 'predeco-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'predeco-app'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(PredecoApp.is, PredecoApp);
+  </script>
+</dom-module>

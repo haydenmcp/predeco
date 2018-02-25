@@ -1,0 +1,7 @@
+{
+  "name": "predeco",
+  "short_name": "predeco",
+  "description": "Application serving visualizations related to economics.",
+  "start_url": "/",
+  "display": "standalone"
+}
