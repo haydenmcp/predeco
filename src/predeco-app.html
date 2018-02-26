@@ -1,0 +1,50 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/deep-configuration/deep-configuration.html">
+<link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-ajax-interceptor.html">
+<link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-url-rewrite-interceptor.html">
+
+<link rel="import" href="predeco-app-shell.html">
+
+<!-- TODO: Update bower components to use releases and not specific branches -->
+
+<dom-module id="predeco-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <deep-configuration
+      file-path="configuration.json"
+      configurations="{{config}}"
+      complete="{{configured}}"
+    ></deep-configuration>
+
+    <mtz-ajax-interceptor>
+      <mtz-url-rewrite-interceptor
+        local-base-url="http://[[config.service.host]]:[[config.service.port]]/"
+        base-url="http://[[config.service.host]]:[[config.service.port]]/"
+      ></mtz-url-rewrite-interceptor>
+
+      <dom-if if="[[configured]]" restamp>
+        <template>
+          <predeco-app-shell></predeco-app-shell>
+        </template>
+      </dom-if>
+
+    </mtz-ajax-interceptor>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PredecoApp extends Polymer.Element {
+      static get is() { return 'predeco-app'; }
+    }
+    window.customElements.define(PredecoApp.is, PredecoApp);
+  </script>
+</dom-module>

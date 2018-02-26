@@ -1,0 +1,38 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/deep-graphql/deep-graphql.html">
+
+<dom-module id="predeco-app-shell">
+  <template>
+    <deep-graphql
+      id="graphql"
+      url="/graphql"
+      query="{hello}"
+      data="{{data}}"
+      auto
+    ></deep-graphql>
+
+    [[__log(data)]]
+
+  </template>
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PredecoAppShell extends Polymer.Element {
+      static get is() { return 'predeco-app-shell'; }
+      __log(data) {
+        debugger;
+        return JSON.stringify(data || '');
+      }
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   this.$.graphql.query().then((data) => {
+      //     debugger;
+      //     this.set('data', data);
+      //   });
+      // }
+    }
+    window.customElements.define(PredecoAppShell.is, PredecoAppShell);
+  </script>
+</dom-module>
