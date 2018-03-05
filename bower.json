@@ -4,6 +4,7 @@
   "main": "index.html",
   "dependencies": {
     "deep-configuration": "ThinkDeepTech/deep-configuration#master",
+    "deep-d3": "ThinkDeepTech/deep-d3#master",
     "deep-graphql": "ThinkDeepTech/deep-graphql#master",
     "iron-ajax": "PolymerElements/iron-ajax#^2.0.0",
     "mtz-ajax-interceptor": "MaritzSTL/mtz-ajax-interceptor#^0.5.1",

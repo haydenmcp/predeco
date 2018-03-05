@@ -11,14 +11,15 @@
   <template>
     <style>
       :host {
-        display: block;
+        display: flex;
+        background-color: #EEEEEE; /* Grey 200 */
       }
     </style>
 
     <deep-configuration
       file-path="configuration.json"
       configurations="{{config}}"
-      complete="{{configured}}"
+      done="{{configured}}"
     ></deep-configuration>
 
     <mtz-ajax-interceptor>
