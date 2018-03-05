@@ -3,14 +3,13 @@
 <link rel="import" href="../bower_components/deep-graphql/deep-graphql.html">
 
 <dom-module id="predeco-app-shell">
-  <template>    
+  <template>
     <deep-graphql
-      id="graphql"
+      id="service"
       url="/graphql"
-      query-object="[[queryObject]]"
       data="{{data}}"
-      auto
     ></deep-graphql>
+
     <h1>GraphQL Data</h1>
     <svg id="display" height="500" width="500"></svg>
 
@@ -30,15 +29,24 @@
       static get properties() {
         return {
           /* Object representing structure to hydrate by graphql */
-          queryObject: {
+          data: {
             type: Object,
             value(){
               return {
-                items: { x: 0, y: 0, radius: 0, color: ''}
+                items: [
+                  { x: 0, y: 0, radius: 0, color: ''}
+                ]
               };
             }
           }
         };
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        const service = this.shadowRoot.querySelector('#service');
+        service.query({
+          items: [{ x: 0, y: 0, radius: 0, color: ''}]
+        }).then((data) => this.display(data));
       }
       /**
        * Update the display with the passed data.
@@ -46,8 +54,6 @@
        */
       display(data) {
         if(!Object.keys(data || {}).length) return;
-        console.info('Data Received:', data.items);
-        // const svg = d3.select(this.shadowRoot).append('svg').attr('height', 200).attr('width', 200);
         const svg = d3.select(this.shadowRoot).select('#display');
         const circles = svg.selectAll('circle').data(data.items).enter().append('circle');
         circles.attr('cx', (d) => d.x).attr('cy', (d) => d.y).attr('r', (d) => d.radius)
