@@ -27,8 +27,8 @@
         super.connectedCallback();
         const service = this.shadowRoot.querySelector('#service');
         service.query({
-          points: [{ x: 0, y: 0, radius: 0, color: ''}]
-        }).then((data) => this.display(data.points));
+          circles: [{ x: 0, y: 0, radius: 0, color: ''}]
+        }).then((data) => this.display(data.circles));
       }
 
       /**
