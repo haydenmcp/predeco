@@ -1,10 +1,26 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/deep-d3/deep-d3.html">
 <link rel="import" href="../bower_components/deep-graphql/deep-graphql.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+
+<link rel="import" href="theme/colors.html">
 
 <dom-module id="predeco-app-shell">
+  <style>
+    :root {
+      display: block;
+      height: 100%;
+      width: 100%;
+      background-color: var(--app-color-primary);
+    }
+    app-toolbar {
+      background-color: var(--app-color-secondary);
+    }
+  </style>
   <template>
     <deep-graphql
       id="service"
@@ -12,9 +28,14 @@
       data="{{data}}"
     ></deep-graphql>
 
-    <h1>[[localize('appName')]]</h1>
+    <app-toolbar>
+      <div main-title>[[appName]]</div>
+      <paper-tabs selected="{{selectedTab}}" attr-for-selected="name">
+        <paper-tab name="login">Login</paper-tab>
+      </paper-tabs>
+    </app-toolbar>
 
-    <svg id="display" height="500" width="500"></svg>
+    <!-- <svg id="display" height="500" width="500"></svg> -->
 
   </template>
   <script>
@@ -35,7 +56,8 @@
             value() {
               return {
                 'en-US': {
-                  appName: 'Predeco'
+                  appName: 'Predeco',
+
                 }
               };
             }

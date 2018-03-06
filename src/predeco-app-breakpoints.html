@@ -1,0 +1,15 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+
+<dom-module id="predeco-app-breakpoints">
+  <template>
+    <style> :host { display: none; } </style>
+
+  </template>
+  <script>
+    class PredecoAppBreakpoints extends Polymer.Element {
+      static get is() { return 'predeco-app-breakpoints'; }
+    }
+    window.customElements.define(PredecoAppBreakpoints.is, PredecoAppBreakpoints);
+  </script>
+</dom-module>

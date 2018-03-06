@@ -4,19 +4,25 @@
 <link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-ajax-interceptor.html">
 <link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-url-rewrite-interceptor.html">
 
-<link rel="import" href="predeco-app-shell.html">
+<link rel="import" href="theme/base-styles.html">
 
+<link rel="import" href="predeco-app-shell.html">
 <!--
 TODO: Update bower components to use releases and not specific branches
 when releases are available. Too young right now.
+TODO: Include app-wide styles in base application.
+TODO: The name of the service worker should describe its job
+TODO What's the most browser compatible method of checking for the service worker?
+TODO How to dynamically set the title in the application <head> ... </head> tag.
+TODO Add iron-media-querries to predeco-app-breakpoints
+TODO Add app pages to dynamically generate routing info & pages.
 -->
 
 <dom-module id="predeco-app">
   <template>
     <style>
       :host {
-        display: flex;
-        background-color: #EEEEEE; /* Grey 200 */
+        display: block;
       }
     </style>
 
@@ -35,6 +41,7 @@ when releases are available. Too young right now.
       <dom-if if="[[configured]]">
         <template>
           <predeco-app-shell
+            app-name="[[config.app.name]]"
             language="[[language]]"
           ></predeco-app-shell>
         </template>
