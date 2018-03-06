@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/deep-d3/deep-d3.html">
 <link rel="import" href="../bower_components/deep-graphql/deep-graphql.html">
 
@@ -10,7 +11,7 @@
       data="{{data}}"
     ></deep-graphql>
 
-    <h1>GraphQL Data</h1>
+    <h1>[[localize('appName')]]</h1>
 
     <svg id="display" height="500" width="500"></svg>
 
@@ -20,9 +21,26 @@
      * @customElement
      * @polymer
      */
-    class PredecoAppShell extends Polymer.Element {
+    class PredecoAppShell extends Polymer.mixinBehaviors([
+      Polymer.AppLocalizeBehavior,
+    ], Polymer.Element) {
       static get is() { return 'predeco-app-shell'; }
-
+      static get properties() {
+        return {
+          /* Localization */
+          language: String,
+          resources: {
+            type: Object,
+            value() {
+              return {
+                'en-US': {
+                  appName: 'Predeco'
+                }
+              };
+            }
+          }
+        };
+      }
       connectedCallback() {
         super.connectedCallback();
         const service = this.shadowRoot.querySelector('#service');
@@ -44,10 +62,16 @@
         for (const shape in data) {
           if(!data.hasOwnProperty(shape)) continue;
           switch (shape || '') {
+            // case 'circles': {
+            //   const circles = svg.selectAll('circle').data(data.circles).enter().append('circle');
+            //   circles.attr('cx', (d) => d.x).attr('cy', (d) => d.y).attr('r', (d) => d.radius)
+            //     .style('fill', (d) => d.color);
+            //   break;
+            // }
             case 'circles': {
-              const circles = svg.selectAll('circle').data(data.circles).enter().append('circle');
-              circles.attr('cx', (d) => d.x).attr('cy', (d) => d.y).attr('r', (d) => d.radius)
-                .style('fill', (d) => d.color);
+              const lineFunction = d3.line().x((d) => d.x).y((d) => d.y).curve(d3.curveCatmullRom.alpha(0.5));
+              svg.append('path').attr('d', lineFunction(data.circles))
+                .attr('stroke', 'blue').attr('stroke-width', 2).attr('fill', 'none');
               break;
             }
             case 'rectangles': {

@@ -9,42 +9,107 @@
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../../web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../../src/predeco-app/predeco-app.html">
+    <link rel="import" href="../../src/predeco-app.html">
   </head>
   <body>
 
-    <test-fixture id="BasicTestFixture">
+    <test-fixture id="basic">
       <template>
         <predeco-app></predeco-app>
       </template>
     </test-fixture>
 
-    <test-fixture id="ChangedPropertyTestFixture">
-      <template>
-        <predeco-app prop1="new-prop1"></predeco-app>
-      </template>
-    </test-fixture>
-
     <script>
-      suite('predeco-app', function() {
+      describe('predeco-app', () => {
+        let element;
 
-        test('instantiating the element with default properties works', function() {
-          var element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'predeco-app');
-          var elementShadowRoot = element.shadowRoot;
-          var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello predeco-app!');
+        beforeEach(() => {
+          element = fixture('basic');
         });
 
-        test('setting a property on the element works', function() {
-          // Create a test fixture
-          var element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          var elementShadowRoot = element.shadowRoot;
-          var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+        /* Sanity check */
+        it('should be the correct element', () => {
+          expect(element.localName).to.equal('predeco-app');
         });
 
+        describe('authentication/authorization', () => {
+          // TODO: What should the standard for access be? Oauth? OWASP? What?
+          it('should require authentication to access', () => {
+            fail();
+          });
+
+          it('should require two-factor authentication', () => {
+            fail();
+          });
+        });
+
+        describe('application use-cases', () => {
+          describe('privileges', () => {
+
+            it('should provide admin privileges', () => {
+              fail();
+            });
+
+            it('should provide standard privileges', () => {
+              fail();
+            });
+
+            describe('admin', () => {
+              it('should be able to maintain and monitor the server-side', () => {
+                fail();
+              });
+              it('should give standard privileges to admins', () => {
+                fail();
+              });
+            });
+
+            describe('standard', () => {
+              it('should allow user to log in', () => {
+                fail();
+              });
+
+              it('should allow user to log out', () => {
+                fail();
+              });
+
+              it('should make investment recommendations to the user', () => {
+                fail();
+              });
+
+              it('should provide an interface allowing the user to simulate result of listening to the recommendations', () => {
+                fail();
+              });
+
+              it('should allow the user to view reasoning behind investment recommendations', () => {
+                fail();
+              });
+
+              it('should send real-time updates to the user when buying/selling should occur', () => {
+                fail();
+              });
+            });
+
+            describe('localization', () => {
+              it('should conform to browser language settings automatically', () => {
+                fail();
+              });
+
+              it('should default to "en-US" if a browser language is not set', () => {
+                fail();
+              });
+
+              it('should conform to standard language codes', () => {
+                fail();
+              });
+            });
+          });
+        });
+
+        /* TODO Event interface */
+
+        /* TODO Public interface */
+
+        /* TODO Protected interface */
       });
     </script>
 

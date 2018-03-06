@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/deep-configuration/deep-configuration.html">
 <link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-ajax-interceptor.html">
 <link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-url-rewrite-interceptor.html">
@@ -30,7 +31,9 @@
 
       <dom-if if="[[configured]]">
         <template>
-          <predeco-app-shell></predeco-app-shell>
+          <predeco-app-shell
+            language="[[language]]"
+          ></predeco-app-shell>
         </template>
       </dom-if>
 
@@ -43,8 +46,46 @@
      * @customElement
      * @polymer
      */
-    class PredecoApp extends Polymer.Element {
+    class PredecoApp extends Polymer.mixinBehaviors([
+      Polymer.AppLocalizeBehavior
+    ], Polymer.Element) {
       static get is() { return 'predeco-app'; }
+      static get properties() {
+        return {
+          /* Localization */
+          language: {
+            type: String,
+            value() {
+              return navigator.language || navigator.userLanguage ||
+                navigator.browserLanguage || 'en-US';
+            }
+          },
+          resources: {
+            type: Object,
+            value() {
+              return {
+                'en-US': {
+
+                }
+              };
+            }
+          }
+        };
+      }
+      static get observers() {
+        return [
+          'applyConfig(config)',
+        ];
+      }
+      /**
+       * Apply application configurations.
+       * @param {Object} config
+       */
+      applyConfig(config = {}) {
+        if(!Object.keys(config || {}).length) return;
+        this.language = config.language ? config.language : this.language;
+        // TODO: Read-in language configurations from ./language/<lang code>.json.
+      }
     }
     window.customElements.define(PredecoApp.is, PredecoApp);
   </script>

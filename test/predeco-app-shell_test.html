@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>predeco-app-shell test</title>
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../../src/predeco-app-shell.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <predeco-app-shell></predeco-app-shell>
+      </template>
+    </test-fixture>
+
+    <script>
+      describe('predeco-app-shell', () => {
+        let element;
+
+        beforeEach(() => {
+          element = fixture('basic');
+        });
+
+        /* Sanity check */
+        it('should be the correct element', () => {
+          expect(element.localName).to.equal('predeco-app-shell');
+        });
+
+        /* TODO Use cases */
+
+        /* TODO Event interface */
+
+        /* TODO Public interface */
+
+        /* TODO Protected interface */
+      });
+    </script>
+  </body>
+</html>

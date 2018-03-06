@@ -3,6 +3,7 @@
   "description": "Application serving visualizations related to economics.",
   "main": "index.html",
   "dependencies": {
+    "app-localize-behavior": "PolymerElements/app-localize-behavior#^2.0.0",
     "deep-configuration": "ThinkDeepTech/deep-configuration#master",
     "deep-d3": "ThinkDeepTech/deep-d3#master",
     "deep-graphql": "ThinkDeepTech/deep-graphql#master",
