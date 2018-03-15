@@ -1,11 +1,41 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 
 <dom-module id="predeco-app-pages">
   <template>
-    
+    <app-location
+      route="{{route}}"
+      path="{{path}}"
+    ></app-location>
+    <app-route
+      route="{{route}}"
+      pattern="[[rootPath]]:page"
+      data="{{routeData}}"
+      tail="{{subroute}}"
+    ></app-route>
+    <iron-pages
+      role="main"
+      selected="{{selectedPage}}"
+      attr-for-selected="name"
+      selected-attribute="active"
+      fallback-selection="404">
+      <predeco-page-login
+        name="login"
+        root-path="[[rootPath]]"
+        language="[[language]]"
+      ></predeco-page-login>
+      <predeco-page-404
+        name="404"
+        root-path="[[rootPath]]"
+        language="[[language]]"
+      ></predeco-page-404>
+    </iron-pages>
+
   </template>
   <script>
-    PredecoAppPages extends Polymer.Element {
+    class PredecoAppPages extends Polymer.Element {
       static get is() { return 'predeco-app-pages'; }
     }
     window.customElements.define(PredecoAppPages.is, PredecoAppPages);

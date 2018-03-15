@@ -9,6 +9,8 @@
 
 <link rel="import" href="theme/colors.html">
 
+<link rel="import" href="page/predeco-app-pages.html">
+
 <dom-module id="predeco-app-shell">
   <style>
     :root {
@@ -27,6 +29,10 @@
       url="/graphql"
       data="{{data}}"
     ></deep-graphql>
+
+    <predeco-app-pages
+      
+    ></predeco-app-pages>
 
     <app-toolbar>
       <div main-title>[[appName]]</div>
