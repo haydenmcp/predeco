@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="../bower_components/deep-configuration/deep-configuration.html">
 <link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-ajax-interceptor.html">
+<link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-auth-interceptor.html">
 <link rel="import" href="../bower_components/mtz-ajax-interceptor/mtz-url-rewrite-interceptor.html">
 
 <link rel="import" href="theme/base-styles.html">
@@ -33,8 +35,16 @@ TODO Add check on all pages for cdn and, if not found, fall back on bower depend
       required-fields="[[requiredConfigurationFields]]"
       valid="{{validConfig}}"
     ></deep-configuration>
+    <app-localstorage-document
+      key="user"
+      data="{{user}}"
+    ></app-localstorage-document>
 
     <mtz-ajax-interceptor>
+      <mtz-auth-interceptor
+        key="Authorization"
+        value="Bearer [[user.id_token]]"
+      ></mtz-auth-interceptor>
       <mtz-url-rewrite-interceptor
         local-base-url="http://[[config.service.host]]:[[config.service.port]]/"
         base-url="http://[[config.service.host]]:[[config.service.port]]/"

@@ -14,8 +14,8 @@
       use-hash-as-path
     ></app-location>
     <app-localstorage-document
-      name="user"
-      value="{{user}}"
+      key="user"
+      data="[[user]]"
     ></app-localstorage-document>
     <deep-configuration
       file="../../configuration.json"
@@ -33,7 +33,7 @@
        static get observers() {
          return [
            'logIn(config, active, validConfig)',
-           '__validateUserAuthorization(__browserPathHash)'
+           '__parseUrlHash(__browserPathHash)'
          ];
        }
        // TODO: How to make application configurations global so that they're only
@@ -53,7 +53,8 @@
           new auth0.WebAuth({
             domain: 'thinkdeep-tech.auth0.com',
             clientID: 'UjjWbCJ3T58C8vh8S3SoqUMGbVhCVKJD',
-            responseType: 'token',
+            audience: 'predeco-api',
+            responseType: 'token id_token',
             scope: 'openid profile email',
             // TODO update /components/predeco EP
             redirectUri: `http://${host}:${port}/components/predeco`
@@ -63,12 +64,13 @@
          * @private
          * @param {String} pathHash - Path hash currently in the browser url address bar.
          */
-        __validateUserAuthorization(pathHash) {
+        __parseUrlHash(pathHash) {
           if(pathHash) {
             const webAuth = new auth0.WebAuth({
               domain: 'thinkdeep-tech.auth0.com',
               clientID: 'UjjWbCJ3T58C8vh8S3SoqUMGbVhCVKJD',
-              responseType: 'token',
+              audience: 'predeco-api',
+              responseType: 'token id_token',
               scope: 'openid profile email',
               redirectUri: 'http://[[config.service.host]]:[[config.service.port]]/components/predeco'
             });
