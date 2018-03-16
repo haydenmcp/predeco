@@ -46,10 +46,8 @@
        * @param {Object[]} points - Array of data to display.
        */
       display(data) {
-        debugger;
         if(!Object.keys(data).length) return;
         console.log('Data Received: ', data);
-        debugger;
         const svg = d3.select(this.shadowRoot).select('#display');
         // Display all shapes
         for (const shape in data) {
