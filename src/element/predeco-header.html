@@ -1,0 +1,43 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="predeco-nav.html">
+
+<dom-module id="predeco-header">
+  <template>
+    <style>
+    </style>
+
+    <app-toolbar>
+      <slot name="drawer-toggle"></slot>
+      <div main-title>Predeco</div>
+      <dom-if if="[[!narrow]]">
+        <template>
+          <predeco-nav
+            selected="{{selectedPage}}"
+            routes="[[routes]]"
+          ></predeco-nav>
+        </template>
+      </dom-if>
+    </app-toolbar>
+  </template>
+  <script>
+    class PredecoHeader extends Polymer.Element {
+      static get is() { return 'predeco-header'; }
+      static get properties() {
+        return {
+          narrow: {
+            type: Boolean,
+            value: false
+          },
+          selectedPage: {
+            type: String,
+            notify: true
+          },
+          routes: Object
+        };
+      }
+    }
+    window.customElements.define(PredecoHeader.is, PredecoHeader);
+  </script>
+</dom-module>

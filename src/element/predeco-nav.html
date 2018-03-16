@@ -1,0 +1,82 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="predeco-nav">
+  <template>
+    <style>
+      :host {
+        flex: 1;
+      }
+      iron-selector {
+        display: flex;
+        justify-content: flex-end;
+      }
+      :host([vertical]) > iron-selector {
+        flex-direction: column;
+      }
+      :host(:not([vertical])) > iron-selector {
+        align-items: center;
+      }
+    </style>
+
+    <iron-selector
+      selected="{{selected}}"
+      attr-for-selected="name"
+      role="navigation">
+      <dom-repeat items="[[__pages(routes)]]" as="page">
+        <!-- TODO: Check page authorization -->
+        <template>
+          <dom-if if="[[!page.hidden]]" restamp>
+            <template>
+              <a name$="[[page.name]]" href$="[[page.path]]">
+                <paper-item>[[page.label]]</paper-item>
+              </a>
+            </template>
+          </dom-if>
+        </template>
+      </dom-repeat>
+    </iron-selector>
+  </template>
+  <script>
+    class PredecoNav extends Polymer.Element {
+      static get is() { return 'predeco-nav'; }
+      static get properties() {
+        return {
+          /* Application routes */
+          routes: Object,
+
+          /* Used to set nav-menu display orientation */
+          vertical: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+
+          /* Currently selected page */
+          selected: {
+            type: String,
+            notify: true
+          }
+        };
+      }
+      /**
+       * Return routes in array form.
+       * @private
+       * @param {Object} pages - Routes object using <page name> : { ... } form.
+       * @return {Object[]} - Routes in array form or [].
+       */
+      __pages(routes) {
+        let pages = [];
+        if ((typeof routes === "object") && !Array.isArray(routes)) {
+          Object.getOwnPropertyNames(routes).forEach((routeName) => {
+            if (!routes[routeName] || !Object.keys(routes[routeName]).length) return;
+            pages.push(routes[routeName]);
+          });
+        }
+        return pages;
+      }
+    }
+    window.customElements.define(PredecoNav.is, PredecoNav);
+  </script>
+</dom-module>

@@ -1,13 +1,18 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <link rel="import" href="theme/colors.html">
-
+<link rel="import" href="element/predeco-header.html">
+<link rel="import" href="element/predeco-nav.html">
 <link rel="import" href="page/predeco-app-pages.html">
+<link rel="import" href="predeco-app-breakpoints.html">
 
 <dom-module id="predeco-app-shell">
   <template>
@@ -23,33 +28,51 @@
       }
     </style>
 
-    <app-toolbar>
-      <div main-title>[[appName]]</div>
-      <paper-tabs selected="{{selectedNavItem}}" attr-for-selected="name">
-        <dom-repeat items="[[__pages(routes)]]" as="page">
+    <app-drawer-layout fullbleed drawer-width="288px" force-narrow>
+      <!-- Drawer content -->
+      <app-drawer slot="drawer" swipe-open="[[xsmall]]">
+        <dom-if if="[[xsmall]]">
           <template>
-            <dom-if if="[[!page.hidden]]">
-              <template>
-                <paper-tab name="[[page.name]]">[[page.label]]</paper-tab>
-              </template>
-            </dom-if>
+            <predeco-nav
+              vertical
+              selected="{{selectedNavItem}}"
+              routes="[[routes]]"
+            ></predeco-nav>
           </template>
-        </dom-repeat>
-      </paper-tabs>
-    </app-toolbar>
+        </dom-if>
+      </app-drawer>
 
-    <div class="content">
-      <predeco-app-pages
-        routes="{{routes}}"
-        selected="{{selectedNavItem}}"
-        root-path="[[rootPath]]"
-        language="[[language]]"
-      ></predeco-app-pages>
-    </div>
+      <!-- Header content -->
+      <predeco-header
+        routes="[[routes]]"
+        selected-page="{{selectedNavItem}}"
+        narrow$="[[xsmall]]">
+        <paper-icon-button
+          slot="drawer-toggle"
+          drawer-toggle
+          icon="icons:menu"
+        ></paper-icon-button>
+      </predeco-header>
 
-    <div class="footer">
-      <!-- TODO -->
-    </div>
+      <div class="content">
+        <paper-spinner active="[[loading]]"></paper-spinner>
+
+        <predeco-app-pages
+          routes="{{routes}}"
+          selected="{{selectedNavItem}}"
+          root-path="[[rootPath]]"
+          language="[[language]]"
+        ></predeco-app-pages>
+      </div>
+
+      <div class="footer">
+        <!-- TODO -->
+      </div>
+    </app-drawer-layout>
+
+    <predeco-app-breakpoints
+      xsmall="{{xsmall}}"
+    ></predeco-app-breakpoints>
 
   </template>
   <script>
@@ -65,13 +88,16 @@
         return {
           /* Root path of the application */
           rootPath: String,
-
           /* Currently selected navigation menu option */
           selectedNavItem: {
             type: String,
             value: 'home'
           },
-
+          /* True if the application is current loading content. False otherwise. */
+          loading: {
+            type: Boolean,
+            value: true
+          },
           /* Localization */
           language: String,
           resources: {
@@ -85,23 +111,6 @@
             }
           }
         };
-      }
-
-      /**
-       * Return routes in array form.
-       * @private
-       * @param {Object} pages - Routes object using <page name> : { ... } form.
-       * @return {Object[]} - Routes in array form or [].
-       */
-      __pages(routes) {
-        let pages = [];
-        if ((typeof routes === "object") && !Array.isArray(routes)) {
-          Object.getOwnPropertyNames(routes).forEach((routeName) => {
-            if (!routes[routeName] || !Object.keys(routes[routeName]).length) return;
-            pages.push(routes[routeName]);
-          });
-        }
-        return pages;
       }
     }
     window.customElements.define(PredecoAppShell.is, PredecoAppShell);
