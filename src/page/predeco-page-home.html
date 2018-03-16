@@ -1,0 +1,17 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="predeco-page-mixin.html">
+
+<dom-module id="predeco-page-home">
+  <template>
+    <style>
+    </style>
+    Home page
+  </template>
+  <script>
+    class PredecoPageHome extends predeco.PageMixin(Polymer.Element) {
+      static get is() { return 'predeco-page-home'; }
+    }
+    window.customElements.define(PredecoPageHome.is, PredecoPageHome);
+  </script>
+</dom-module>

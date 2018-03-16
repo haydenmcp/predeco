@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "Predeco",
-    "language": "en-US"
+    "language": "en-US",
+    "host": "127.0.0.1",
+    "port": "8081"
   },
   "service": {
     "host": "127.0.0.1",

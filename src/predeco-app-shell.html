@@ -12,36 +12,52 @@
 <link rel="import" href="page/predeco-app-pages.html">
 
 <dom-module id="predeco-app-shell">
-  <style>
-    :root {
-      display: block;
-      height: 100%;
-      width: 100%;
-      background-color: var(--app-color-primary);
-    }
-    app-toolbar {
-      background-color: var(--app-color-secondary);
-    }
-  </style>
   <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background-color: var(--app-color-primary);
+      }
+      app-toolbar {
+        background-color: var(--app-color-secondary);
+      }
+    </style>
+
     <deep-graphql
       id="service"
       url="/graphql"
       data="{{data}}"
     ></deep-graphql>
 
-    <predeco-app-pages
-      
-    ></predeco-app-pages>
-
     <app-toolbar>
       <div main-title>[[appName]]</div>
-      <paper-tabs selected="{{selectedTab}}" attr-for-selected="name">
-        <paper-tab name="login">Login</paper-tab>
+      <paper-tabs selected="{{selected}}" attr-for-selected="name">
+        <dom-repeat items="[[__pages(routes)]]" as="page">
+          <template>
+            <dom-if if="[[!page.hidden]]">
+              <template>
+                <paper-tab name="[[page.name]]">[[page.label]]</paper-tab>
+              </template>
+            </dom-if>
+          </template>
+        </dom-repeat>
       </paper-tabs>
     </app-toolbar>
 
-    <svg id="display" height="500" width="500"></svg>
+    <div class="content">
+      <predeco-app-pages
+        routes="{{routes}}"
+        selected="{{selected}}"
+        root-path="[[rootPath]]"
+        language="[[language]]"
+      ></predeco-app-pages>
+    </div>
+
+    <div class="footer">
+      <!-- TODO -->
+    </div>
 
   </template>
   <script>
@@ -55,6 +71,9 @@
       static get is() { return 'predeco-app-shell'; }
       static get properties() {
         return {
+          /* Root path of the application */
+          rootPath: String,
+
           /* Localization */
           language: String,
           resources: {
@@ -69,14 +88,32 @@
           }
         };
       }
-      connectedCallback() {
-        super.connectedCallback();
-        const service = this.shadowRoot.querySelector('#service');
-        service.query({
-          circles: [{ x: 0, y: 0, radius: 0, color: ''}],
-          rectangles: [{x: 0, y: 0, height: 0, width: 0, color: ''}]
-        }).then((data) => this.display(data));
+
+      /**
+       * Return routes in array form.
+       * @private
+       * @param {Object} pages - Routes object using <page name> : { ... } form.
+       * @return {Object[]} - Routes in array form or [].
+       */
+      __pages(routes) {
+        let pages = [];
+        if ((typeof routes === "object") && !Array.isArray(routes)) {
+          Object.getOwnPropertyNames(routes).forEach((routeName) => {
+            if (!routes[routeName] || !Object.keys(routes[routeName]).length) return;
+            pages.push(routes[routeName]);
+          });
+        }
+        return pages;
       }
+
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   const service = this.shadowRoot.querySelector('#service');
+      //   service.query({
+      //     circles: [{ x: 0, y: 0, radius: 0, color: ''}],
+      //     rectangles: [{x: 0, y: 0, height: 0, width: 0, color: ''}]
+      //   }).then((data) => this.display(data));
+      // }
 
       /**
        * Update the display with the passed data.

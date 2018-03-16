@@ -28,9 +28,10 @@ TODO Add check on all pages for cdn and, if not found, fall back on bower depend
     </style>
 
     <deep-configuration
-      file-path="configuration.json"
-      configurations="{{config}}"
-      done="{{configured}}"
+      file="configuration.json"
+      configuration="{{config}}"
+      required-fields="[[requiredConfigurationFields]]"
+      valid="{{validConfig}}"
     ></deep-configuration>
 
     <mtz-ajax-interceptor>
@@ -39,10 +40,11 @@ TODO Add check on all pages for cdn and, if not found, fall back on bower depend
         base-url="http://[[config.service.host]]:[[config.service.port]]/"
       ></mtz-url-rewrite-interceptor>
 
-      <dom-if if="[[configured]]">
+      <dom-if if="[[validConfig]]">
         <template>
           <predeco-app-shell
             app-name="[[config.app.name]]"
+            root-path="http://[[config.service.host]]:[[config.service.port]]/"
             language="[[language]]"
           ></predeco-app-shell>
         </template>
@@ -63,6 +65,17 @@ TODO Add check on all pages for cdn and, if not found, fall back on bower depend
       static get is() { return 'predeco-app'; }
       static get properties() {
         return {
+          requiredConfigurationFields: {
+            type: Array,
+            value() {
+              return [
+                'app.host',
+                'app.port',
+                'service.host',
+                'service.port'
+              ];
+            }
+          },
           /* Localization */
           language: {
             type: String,

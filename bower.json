@@ -6,6 +6,7 @@
     "app-layout": "PolymerElements/app-layout#^2.0.0",
     "app-localize-behavior": "PolymerElements/app-localize-behavior#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.0",
+    "app-storage": "PolymerElements/app-storage#^2.0.0",
     "deep-configuration": "ThinkDeepTech/deep-configuration#master",
     "deep-d3": "ThinkDeepTech/deep-d3#master",
     "deep-graphql": "ThinkDeepTech/deep-graphql#master",
@@ -15,6 +16,7 @@
     "iron-media-query": "PolymerElements/iron-media-query#^2.0.0",
     "iron-pages": "PolymerElements/iron-pages#^2.0.0",
     "mtz-ajax-interceptor": "MaritzSTL/mtz-ajax-interceptor#^0.5.1",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
     "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
     "polymer": "Polymer/polymer#^2.0.0"
   },
