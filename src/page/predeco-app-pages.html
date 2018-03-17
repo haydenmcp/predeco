@@ -1,0 +1,107 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+
+<!-- TODO Lazy import pages? -->
+<link rel="import" href="predeco-page-home.html">
+<link rel="import" href="predeco-page-login.html">
+<link rel="import" href="predeco-page-404.html">
+
+<dom-module id="predeco-app-pages">
+  <template>
+    <app-localstorage-document
+      key="user"
+      data={{user}}
+    ></app-localstorage-document>
+    <app-location
+      route="{{route}}"
+      path="{{path}}"
+    ></app-location>
+    <app-route
+      route="{{route}}"
+      pattern="[[rootPath]]:page"
+      data="{{routeData}}"
+      tail="{{subroute}}"
+    ></app-route>
+    <iron-pages
+      role="main"
+      selected="{{selected}}"
+      attr-for-selected="name"
+      selected-attribute="active"
+      fallback-selection="404"
+      items="{{__pages}}">
+      <!-- TODO Default page dummy. remove later. -->
+      <predeco-page-home
+        name="home"
+        label="Home"
+        root-path="[[rootPath]]"
+        language="[[language]]"
+      ></predeco-page-home>
+      <predeco-page-login
+        name="login"
+        label="Login"
+        root-path="[[rootPath]]"
+        hidden$="[[user.loggedIn]]"
+        language="[[language]]"
+      ></predeco-page-login>
+      <predeco-page-404
+        name="404"
+        label="404"
+        root-path="[[rootPath]]"
+        language="[[language]]"
+        hidden
+      ></predeco-page-404>
+    </iron-pages>
+
+  </template>
+  <script>
+    class PredecoAppPages extends Polymer.Element {
+      static get is() { return 'predeco-app-pages'; }
+      static get properties() {
+        return {
+          /* Routes associated with the application */
+          routes: {
+            type: Object,
+            value() {
+              return {};
+            },
+            notify: true,
+            readOnly: true
+          },
+
+          /* Currently selected page */
+          selected: HTMLElement
+        };
+      }
+      static get observers() {
+        return [
+          '__updateRoutes(__pages, user)'
+        ];
+      }
+
+      /**
+       * Compute the routes.
+       * @private
+       * @param {HTMLElement[]} pages - Page elements from iron-pages.
+       * @return {Object} - Routes object in the form routes[<page name>] or an
+       * empty object.
+       */
+      __updateRoutes(pages) {
+        if (!Array.isArray(pages)) return {};
+        const routes = {};
+        pages.forEach((page) => {
+          if (!page || !page.getAttribute('name')) return;
+          routes[`${page.getAttribute('name')}`] = {
+            name: page.getAttribute('name') || '',
+            label: page.getAttribute('label') || '',
+            hidden: page.getAttribute('hidden') === '' ? true : false
+          };
+        });
+        this._setRoutes(routes);
+      }
+    }
+    window.customElements.define(PredecoAppPages.is, PredecoAppPages);
+  </script>
+</dom-module>

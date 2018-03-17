@@ -1,19 +1,55 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
-<link rel="import" href="../bower_components/deep-d3/deep-d3.html">
-<link rel="import" href="../bower_components/deep-graphql/deep-graphql.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+
+<link rel="import" href="theme/colors.html">
+
+<link rel="import" href="page/predeco-app-pages.html">
 
 <dom-module id="predeco-app-shell">
   <template>
-    <deep-graphql
-      id="service"
-      url="/graphql"
-      data="{{data}}"
-    ></deep-graphql>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background-color: var(--app-color-primary);
+      }
+      app-toolbar {
+        background-color: var(--app-color-secondary);
+      }
+    </style>
 
-    <h1>[[localize('appName')]]</h1>
+    <app-toolbar>
+      <div main-title>[[appName]]</div>
+      <paper-tabs selected="{{selectedNavItem}}" attr-for-selected="name">
+        <dom-repeat items="[[__pages(routes)]]" as="page">
+          <template>
+            <dom-if if="[[!page.hidden]]">
+              <template>
+                <paper-tab name="[[page.name]]">[[page.label]]</paper-tab>
+              </template>
+            </dom-if>
+          </template>
+        </dom-repeat>
+      </paper-tabs>
+    </app-toolbar>
 
-    <svg id="display" height="500" width="500"></svg>
+    <div class="content">
+      <predeco-app-pages
+        routes="{{routes}}"
+        selected="{{selectedNavItem}}"
+        root-path="[[rootPath]]"
+        language="[[language]]"
+      ></predeco-app-pages>
+    </div>
+
+    <div class="footer">
+      <!-- TODO -->
+    </div>
 
   </template>
   <script>
@@ -27,6 +63,15 @@
       static get is() { return 'predeco-app-shell'; }
       static get properties() {
         return {
+          /* Root path of the application */
+          rootPath: String,
+
+          /* Currently selected navigation menu option */
+          selectedNavItem: {
+            type: String,
+            value: 'home'
+          },
+
           /* Localization */
           language: String,
           resources: {
@@ -41,47 +86,22 @@
           }
         };
       }
-      connectedCallback() {
-        super.connectedCallback();
-        const service = this.shadowRoot.querySelector('#service');
-        service.query({
-          circles: [{ x: 0, y: 0, radius: 0, color: ''}],
-          rectangles: [{x: 0, y: 0, height: 0, width: 0, color: ''}]
-        }).then((data) => this.display(data));
-      }
 
       /**
-       * Update the display with the passed data.
-       * @param {Object[]} points - Array of data to display.
+       * Return routes in array form.
+       * @private
+       * @param {Object} pages - Routes object using <page name> : { ... } form.
+       * @return {Object[]} - Routes in array form or [].
        */
-      display(data) {
-        if(!Object.keys(data).length) return;
-        console.log('Data Received: ', data);
-        const svg = d3.select(this.shadowRoot).select('#display');
-        // Display all shapes
-        for (const shape in data) {
-          if(!data.hasOwnProperty(shape)) continue;
-          switch (shape || '') {
-            // case 'circles': {
-            //   const circles = svg.selectAll('circle').data(data.circles).enter().append('circle');
-            //   circles.attr('cx', (d) => d.x).attr('cy', (d) => d.y).attr('r', (d) => d.radius)
-            //     .style('fill', (d) => d.color);
-            //   break;
-            // }
-            case 'circles': {
-              const lineFunction = d3.line().x((d) => d.x).y((d) => d.y).curve(d3.curveCatmullRom.alpha(0.5));
-              svg.append('path').attr('d', lineFunction(data.circles))
-                .attr('stroke', 'blue').attr('stroke-width', 2).attr('fill', 'none');
-              break;
-            }
-            case 'rectangles': {
-              const rectangles = svg.selectAll('rect').data(data.rectangles).enter().append('rect');
-              rectangles.attr('x', (d) => d.x).attr('y', (d) => d.y).attr('width', (d) => d.width).
-               attr('height', (d) => d.height).style('fill', (d) => d.color);
-              break;
-            }
-          }
+      __pages(routes) {
+        let pages = [];
+        if ((typeof routes === "object") && !Array.isArray(routes)) {
+          Object.getOwnPropertyNames(routes).forEach((routeName) => {
+            if (!routes[routeName] || !Object.keys(routes[routeName]).length) return;
+            pages.push(routes[routeName]);
+          });
         }
+        return pages;
       }
     }
     window.customElements.define(PredecoAppShell.is, PredecoAppShell);
